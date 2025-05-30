@@ -1,7 +1,7 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
 <head>
-	<title>10college</title>
+    <title>10college</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <link rel="apple-touch-icon" sizes="180x180" href="./css/favicon/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="./css/favicon/favicon2.png">
@@ -13,21 +13,60 @@
     <!-- end favicon -->
     <link type="text/css" rel="stylesheet" href="./css/common.css">
     <style>
-        body{
+        body {
             margin: 0;
             padding: 0;
+        }
+
+        #playBgmBtn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 9999;
+            padding: 10px 15px;
+            font-size: 16px;
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            cursor: pointer;
         }
     </style>
 </head>
 <body>
+    <!-- Music Play Button -->
+    <button id="playBgmBtn">🎵 Play Music</button>
+
+    <!-- Audio Element -->
+    <audio id="bgm" src="./music/bgm.mp3" loop></audio>
+
+    <!-- Existing script -->
     <script src="./libs/fas.js"></script>
-	<script type="module">
+    <script type="module">
         import { App } from './app.js';
-        
-		document.addEventListener("DOMContentLoaded", function(){
-			const app = new App();
-			window.app = app;
-		});
-	</script>
+
+        document.addEventListener("DOMContentLoaded", function () {
+            const app = new App();
+            window.app = app;
+        });
+    </script>
+
+    <!-- Music Control Script -->
+    <script>
+        const bgm = document.getElementById('bgm');
+        const playBtn = document.getElementById('playBgmBtn');
+        let isPlaying = false;
+
+        playBtn.addEventListener('click', () => {
+            if (!isPlaying) {
+                bgm.play();
+                playBtn.textContent = '⏸️ Pause Music';
+                isPlaying = true;
+            } else {
+                bgm.pause();
+                playBtn.textContent = '🎵 Play Music';
+                isPlaying = false;
+            }
+        });
+    </script>
 </body>
 </html>
