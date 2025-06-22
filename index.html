@@ -67,23 +67,24 @@
 
         btn.addEventListener('click', toggle);
 
-        // ✅ 等待 App 初始化完成再拿 renderer 和 scene
-        document.addEventListener('DOMContentLoaded', () => {
+        // 延迟执行，等 app 初始化完成
+        setTimeout(() => {
             if (window.app && window.app.renderer && window.app.scene) {
                 const renderer = window.app.renderer;
                 const scene = window.app.scene;
 
-                const controller = renderer.xr.getController(0); // 右手控制器
+                const controller = renderer.xr.getController(0);
                 controller.addEventListener('selectstart', () => {
                     console.log('🎮 Trigger pressed');
                     toggle();
                 });
                 scene.add(controller);
             } else {
-                console.warn('App not ready or renderer/scene missing');
+                console.warn('WebXR controller not initialized. Make sure App is ready.');
             }
-        });
+        }, 1000); //delay 1 s
     </script>
+
 
 </body>
 </html>
