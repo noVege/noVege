@@ -54,18 +54,22 @@
     <!-- Music Control Script -->
     <script>
         const bgm = document.getElementById('bgm');
-        const playBtn = document.getElementById('playBgmBtn');
-        let isPlaying = false;
+        const btn = document.getElementById('playBgmBtn');
 
-        playBtn.addEventListener('click', () => {
-            if (!isPlaying) {
+        function toggle() {
+            if (bgm.paused) {
                 bgm.play();
-                playBtn.textContent = '⏸️ Pause Music';
-                isPlaying = true;
+                btn.textContent = '⏸️ Pause Music';
             } else {
                 bgm.pause();
-                playBtn.textContent = '🎵 Play Music';
-                isPlaying = false;
+                btn.textContent = '🎵 Play Music';
+            }
+        }
+
+        btn.addEventListener('click', toggle);
+        document.addEventListener('keydown', e => {
+            if ((e.key === 'p' || e.key === 'P') && !['input', 'textarea'].includes(document.activeElement.tagName.toLowerCase())) {
+                toggle();
             }
         });
     </script>
