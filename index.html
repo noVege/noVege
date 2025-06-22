@@ -51,7 +51,6 @@
         });
     </script>
 
-    <!-- Music Control Script -->
     <script>
         const bgm = document.getElementById('bgm');
         const btn = document.getElementById('playBgmBtn');
@@ -66,12 +65,16 @@
             }
         }
 
+        // 按钮点击触发
         btn.addEventListener('click', toggle);
-        document.addEventListener('keydown', e => {
-            if ((e.key === 'p' || e.key === 'P') && !['input', 'textarea'].includes(document.activeElement.tagName.toLowerCase())) {
-                toggle();
-            }
-        });
+
+        // WebXR controller trigger
+        if (renderer?.xr && scene) {
+            const controller = renderer.xr.getController(0); // 右手控制器
+            controller.addEventListener('selectstart', toggle); // Trigger 按下触发
+            scene.add(controller);
+        }
     </script>
+
 </body>
 </html>
