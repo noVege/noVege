@@ -54,17 +54,14 @@
     <script>
         const bgm = document.getElementById('bgm');
         const btn = document.getElementById('playBgmBtn');
-        let isPlaying = false;
 
-        function toggle(playForced = false) {
-            if (bgm.paused || playForced) {
+        function toggle() {
+            if (bgm.paused) {
                 bgm.play();
                 btn.textContent = '⏸️ Pause Music';
-                isPlaying = true;
             } else {
                 bgm.pause();
                 btn.textContent = '🎵 Play Music';
-                isPlaying = false;
             }
         }
 
@@ -85,40 +82,8 @@
                 toggle();
             });
             scene.add(controller);
-        
-            // 🚀 自动播放音乐（靠近 oiiai cat）
-            let target = null;
-
-            const checkReady = setInterval(() => {
-                if (!scene) return;
-                scene.traverse(obj => {
-                    if (obj.name === "oiiai cat") {
-                        target = obj;
-                        console.log("🎯 找到 oiiai cat");
-                        clearInterval(checkReady);
-                    }
-                });
-            }, 500);
-
-            renderer.setAnimationLoop(() => {
-                if (target && camera) {
-                    const distance = camera.position.distanceTo(target.getWorldPosition(new THREE.Vector3()));
-                    if (distance < 3) {
-                        if (!isPlaying) {
-                            toggle(true); // 强制播放
-                        }
-                    } else {
-                        if (isPlaying) {
-                            toggle(false); // 自动停止
-                        }
-                    }
-                }
-
-                renderer.render(scene, camera);
-            });
         });
     </script>
-
 
 
 
