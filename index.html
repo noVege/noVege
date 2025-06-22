@@ -3,15 +3,7 @@
 <head>
     <title>10college</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <link rel="apple-touch-icon" sizes="180x180" href="./css/favicon/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="./css/favicon/favicon2.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="./css/favicon/favicon1.png">
-    <link rel="manifest" href="./css/favicon/site.webmanifest">
-    <link rel="mask-icon" href="./css/favicon/safari-pinned-tab.svg" color="#5bbad5">
-    <meta name="msapplication-TileColor" content="#da532c">
-    <meta name="theme-color" content="#ffffff">
-    <!-- end favicon -->
-    <link type="text/css" rel="stylesheet" href="./css/common.css">
+    <link rel="stylesheet" href="./css/common.css">
     <style>
         body {
             margin: 0;
@@ -33,56 +25,77 @@
     </style>
 </head>
 <body>
-    <!-- Music Play Button -->
+    <!-- Play Music Button -->
     <button id="playBgmBtn">🎵 Play Music</button>
-
-    <!-- Audio Element -->
     <audio id="bgm" src="./assets/music/bgm.mp3" loop></audio>
 
-
-    <!-- Existing script -->
+    <!-- External Script -->
     <script src="./libs/fas.js"></script>
+
+    <!-- Main Module Script -->
     <script type="module">
         import { App } from './app.js';
 
-        document.addEventListener("DOMContentLoaded", function () {
-            const app = new App();
-            window.app = app;
-        });
-        <script>
-            const bgm = document.getElementById('bgm');
-            const btn = document.getElementById('playBgmBtn');
+        const bgm = document.getElementById('bgm');
+        const btn = document.getElementById('playBgmBtn');
+        let isPlaying = false;
 
-            function toggle() {
-            if (bgm.paused) {
+        function toggle(playForced = false) {
+            if (bgm.paused || playForced) {
                 bgm.play();
-            btn.textContent = '⏸️ Pause Music';
+                btn.textContent = '⏸️ Pause Music';
+                isPlaying = true;
             } else {
                 bgm.pause();
-            btn.textContent = '🎵 Play Music';
+                btn.textContent = '🎵 Play Music';
+                isPlaying = false;
             }
         }
 
-            btn.addEventListener('click', toggle);
+        btn.addEventListener('click', () => toggle());
 
-            // 放在 DOMContentLoaded 里确保 App 初始化后执行
-            document.addEventListener("DOMContentLoaded", function () {
+        document.addEventListener("DOMContentLoaded", () => {
             const app = new App();
             window.app = app;
 
-            // ✅ 控制器逻辑放这里，确保 app.renderer 和 app.scene 已就绪
             const renderer = app.renderer;
             const scene = app.scene;
+            const camera = app.camera;
 
-            const controller = renderer.xr.getController(0); // 右手控制器
+            // 🎮 Trigger music via controller
+            const controller = renderer.xr.getController(0);
             controller.addEventListener('selectstart', () => {
                 console.log('🎮 Trigger pressed');
-            toggle();
+                toggle();
             });
             scene.add(controller);
+
+            // 🔍 Auto play when near "oiiai cat"
+            let target = null;
+
+            const checkReady = setInterval(() => {
+                if (!scene) return;
+                scene.traverse(obj => {
+                    if (obj.name === "oiiai cat") {
+                        target = obj;
+                        console.log("🎯 Found oiiai cat");
+                        clearInterval(checkReady);
+                    }
+                });
+            }, 500);
+
+            renderer.setAnimationLoop(() => {
+                if (target && camera) {
+                    const dist = camera.position.distanceTo(target.getWorldPosition(new THREE.Vector3()));
+                    if (dist < 3) {
+                        if (!isPlaying) toggle(true);
+                    } else {
+                        if (isPlaying) toggle(false);
+                    }
+                }
+                renderer.render(scene, camera);
+            });
         });
     </script>
-
-
 </body>
 </html>
