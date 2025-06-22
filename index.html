@@ -54,36 +54,71 @@
     <script>
         const bgm = document.getElementById('bgm');
         const btn = document.getElementById('playBgmBtn');
+        let isPlaying = false;
 
-        function toggle() {
-            if (bgm.paused) {
+        function toggle(playForced = false) {
+            if (bgm.paused || playForced) {
                 bgm.play();
                 btn.textContent = '⏸️ Pause Music';
+                isPlaying = true;
             } else {
                 bgm.pause();
                 btn.textContent = '🎵 Play Music';
+                isPlaying = false;
             }
         }
 
-        btn.addEventListener('click', toggle);
+        btn.addEventListener('click', () => toggle());
 
-        // 放在 DOMContentLoaded 里确保 App 初始化后执行
         document.addEventListener("DOMContentLoaded", function () {
             const app = new App();
             window.app = app;
 
-            // ✅ 控制器逻辑放这里，确保 app.renderer 和 app.scene 已就绪
             const renderer = app.renderer;
             const scene = app.scene;
+            const camera = app.camera;
 
-            const controller = renderer.xr.getController(0); // 右手控制器
+            // 手柄触发播放
+            const controller = renderer.xr.getController(0);
             controller.addEventListener('selectstart', () => {
                 console.log('🎮 Trigger pressed');
                 toggle();
             });
             scene.add(controller);
+
+            // 🚀 自动播放音乐（靠近 oiiai cat）
+            let target = null;
+
+            const checkReady = setInterval(() => {
+                if (!scene) return;
+                scene.traverse(obj => {
+                    if (obj.name === "oiiai cat") {
+                        target = obj;
+                        console.log("🎯 找到 oiiai cat");
+                        clearInterval(checkReady);
+                    }
+                });
+            }, 500);
+
+            renderer.setAnimationLoop(() => {
+                if (target && camera) {
+                    const distance = camera.position.distanceTo(target.getWorldPosition(new THREE.Vector3()));
+                    if (distance < 3) {
+                        if (!isPlaying) {
+                            toggle(true); // 强制播放
+                        }
+                    } else {
+                        if (isPlaying) {
+                            toggle(false); // 自动停止
+                        }
+                    }
+                }
+
+                renderer.render(scene, camera);
+            });
         });
     </script>
+
 
 
 
