@@ -26,5 +26,9 @@
     "BlackWhiteCat": {
         "name": "Black & White Cat",
         "info": "Campus guardian. Has claimed 3 benches and one vending machine as its territory."
+    },
+    "BananaCat": {
+        "name": "Banana Cat",
+        "info": "Often seen napping next to people. A true campus meme legend."
     }
 }
