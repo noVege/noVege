@@ -1,5 +1,30 @@
 {
-    "Atrium_Table_1":{ "name":"Atrium", "info":"Students can meet in small groups in the Atrium for informal sessions."},
-    "LobbyShop":{ "name":"Lobby Shop", "info":"Students can get lots of items from the Lobby Shop."},
-    "Kitchen_Worktop_Hobs__1_":{ "name":"Kitchen", "info":"The kitchen has a level 5 hygiene rating."}
+    "Atrium_Table_1": {
+        "name": "Atrium",
+        "info": "Students can meet in small groups in the Atrium for informal sessions."
+    },
+    "LobbyShop": {
+        "name": "Lobby Shop",
+        "info": "Students can get lots of items from the Lobby Shop."
+    },
+    "Kitchen_Worktop_Hobs__1_": {
+        "name": "Kitchen",
+        "info": "The kitchen has a level 5 hygiene rating."
+    },
+    "OiiaiCat": {
+        "name": "Oiiai Cat",
+        "info": "A cat like to dance and spin."
+    },
+    "NoodleCat": {
+        "name": "Noodle Cat",
+        "info": "A cat that looks like it knows kung fu and likes to eat noodles."
+    },
+    "Psyduck": {
+        "name": "Psyduck",
+        "info": "Always confused... but strangely insightful when it counts."
+    },
+    "BlackWhiteCat": {
+        "name": "Black & White Cat",
+        "info": "Campus guardian. Has claimed 3 benches and one vending machine as its territory."
+    }
 }
