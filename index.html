@@ -3,18 +3,7 @@
 <head>
     <title>10college</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-
-    <!-- Favicon -->
-    <link rel="apple-touch-icon" sizes="180x180" href="./css/favicon/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="./css/favicon/favicon2.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="./css/favicon/favicon1.png">
-    <link rel="manifest" href="./css/favicon/site.webmanifest">
-    <link rel="mask-icon" href="./css/favicon/safari-pinned-tab.svg" color="#5bbad5">
-    <meta name="msapplication-TileColor" content="#da532c">
-    <meta name="theme-color" content="#ffffff">
-
-    <!-- CSS -->
-    <link type="text/css" rel="stylesheet" href="./css/common.css">
+    <link rel="stylesheet" href="./css/common.css">
     <style>
         body {
             margin: 0;
@@ -49,70 +38,26 @@
         import { App } from './app.js';
         import * as THREE from './libs/three/three.module.js';
 
-        document.addEventListener("DOMContentLoaded", function () {
-            const app = new App();
-            window.app = app;
-
+        document.addEventListener("DOMContentLoaded", () => {
             const bgm = document.getElementById('bgm');
             const bgmCat = document.getElementById('bgmCat');
             const btn = document.getElementById('playBgmBtn');
-            let nearCat = false;
 
-            function toggleBgm() {
+            const app = new App({ bgm, bgmCat, bgmBtn: btn });
+            window.app = app;
+
+            btn.addEventListener('click', () => {
                 if (bgm.paused) {
                     bgm.play();
+                    bgmCat.play(); // 解锁权限
+                    bgmCat.pause();
                     btn.textContent = '⏸️ Pause Music';
                 } else {
                     bgm.pause();
+                    bgmCat.pause();
                     btn.textContent = '🎵 Play Music';
                 }
-            }
-
-            btn.addEventListener('click', toggleBgm);
-
-            const renderer = app.renderer;
-            const scene = app.scene;
-            const controller = renderer.xr.getController(0);
-            controller.addEventListener('selectstart', () => {
-                console.log('🎮 Trigger pressed');
-                toggleBgm();
             });
-            scene.add(controller);
-
-            renderer.setAnimationLoop(() => {
-                if (!app.scene || !app.dolly) return;
-
-                const oiiaiCat = app.scene.getObjectByName("OiiaiCat");
-                if (oiiaiCat) {
-                    oiiaiCat.rotation.y += 0.01;
-
-                    const catPos = oiiaiCat.getWorldPosition(new THREE.Vector3());
-                    const dollyPos = app.dolly.getWorldPosition(new THREE.Vector3());
-                    const dist = dollyPos.distanceTo(catPos);
-
-                    if (dist < 3) {
-                        if (!nearCat) {
-                            // 进入猫区域：切到 cat 音乐
-                            bgm.pause();
-                            bgmCat.currentTime = 0; // 重头播放
-                            bgmCat.play();
-                            nearCat = true;
-                        }
-                    } else {
-                        if (nearCat) {
-                            // 离开猫区域：切回 bgm（只有用户原本有开）
-                            bgmCat.pause();
-                            if (btn.textContent === '⏸️ Pause Music') {
-                                bgm.play();
-                            }
-                            nearCat = false;
-                        }
-                    }
-                }
-            });
-
-
-
         });
     </script>
 </body>
