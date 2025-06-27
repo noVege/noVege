@@ -17,7 +17,7 @@ class VRButton{
             this.sessionMode = 'immersive-vr';
         }
         
-       if (this.sessionInit === undefined ) this.sessionInit = { optionalFeatures: [ 'local-floor', 'bounded-floor' ] };
+       if (this.sessionInit === undefined ) this.sessionInit = { optionalFeatures: [ 'local-floor' ] };
         
         if ( 'xr' in navigator ) {
 
