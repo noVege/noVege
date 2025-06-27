@@ -343,6 +343,10 @@ class App{
                             bgm.play();
                             this.nearOiiaiCat = true;
                         }
+
+                        // 👇 Add this line to rotate the model
+                        oiiaiCat.rotation.y += 0.01;
+
                     } else {
                         if (this.nearOiiaiCat) {
                             bgm.pause();
