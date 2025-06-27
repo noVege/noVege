@@ -355,30 +355,14 @@ class App{
             this.immersive = this.renderer.xr.isPresenting;
         }
 
-        // 🔊 音乐控制逻辑 + 猫自转
         const oiiaiCat = this.scene.getObjectByName("OiiaiCat");
-        if (oiiaiCat && this.bgm && this.bgmCat) {
-            oiiaiCat.rotation.y += 0.01;
-
+        if (oiiaiCat) {
             const catPos = oiiaiCat.getWorldPosition(this.workingVec3);
             const dollyPos = this.dolly.getWorldPosition(new THREE.Vector3());
             const dist = dollyPos.distanceTo(catPos);
 
             if (dist < 3) {
-                if (!this.nearCat) {
-                    this.bgm.pause();
-                    this.bgmCat.currentTime = 0;
-                    this.bgmCat.play().catch(e => console.warn("🐱 播放 cat1 失败:", e));
-                    this.nearCat = true;
-                }
-            } else {
-                if (this.nearCat) {
-                    this.bgmCat.pause();
-                    if (this.bgmBtn?.textContent === '⏸️ Pause Music') {
-                        this.bgm.play();
-                    }
-                    this.nearCat = false;
-                }
+                oiiaiCat.rotation.y += 0.3;
             }
         }
 
