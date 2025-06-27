@@ -3,8 +3,6 @@
 <head>
     <title>10college</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-
-    <!-- Favicon -->
     <link rel="apple-touch-icon" sizes="180x180" href="./css/favicon/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="./css/favicon/favicon2.png">
     <link rel="icon" type="image/png" sizes="16x16" href="./css/favicon/favicon1.png">
@@ -12,8 +10,7 @@
     <link rel="mask-icon" href="./css/favicon/safari-pinned-tab.svg" color="#5bbad5">
     <meta name="msapplication-TileColor" content="#da532c">
     <meta name="theme-color" content="#ffffff">
-
-    <!-- CSS -->
+    <!-- end favicon -->
     <link type="text/css" rel="stylesheet" href="./css/common.css">
     <style>
         body {
@@ -36,74 +33,58 @@
     </style>
 </head>
 <body>
-    <!-- 🎵 Music Controls -->
+    <!-- Music Play Button -->
     <button id="playBgmBtn">🎵 Play Music</button>
+
+    <!-- Audio Element -->
     <audio id="bgm" src="./assets/music/bgm.mp3" loop></audio>
-    <audio id="bgmCat" src="./assets/music/cat1.mp3" loop></audio>
 
-    <!-- Library -->
+
+    <!-- Existing script -->
     <script src="./libs/fas.js"></script>
-
-    <!-- Main -->
     <script type="module">
         import { App } from './app.js';
-        import * as THREE from './libs/three/three.module.js';
 
         document.addEventListener("DOMContentLoaded", function () {
             const app = new App();
             window.app = app;
-
-            const bgm = document.getElementById('bgm');
-            const bgmCat = document.getElementById('bgmCat');
-            const btn = document.getElementById('playBgmBtn');
-            let nearCat = false;
-
-            function toggleBgm() {
-                if (bgm.paused) {
-                    bgm.play();
-                    btn.textContent = '⏸️ Pause Music';
-                } else {
-                    bgm.pause();
-                    btn.textContent = '🎵 Play Music';
-                }
-            }
-
-            btn.addEventListener('click', toggleBgm);
-
-            const renderer = app.renderer;
-            const scene = app.scene;
-            const controller = renderer.xr.getController(0);
-            controller.addEventListener('selectstart', () => {
-                console.log('🎮 Trigger pressed');
-                toggleBgm();
-            });
-            scene.add(controller);
-
-            renderer.setAnimationLoop(() => {
-                if (!app.scene || !app.dolly) return;
-
-                const oiiaiCat = app.scene.getObjectByName("OiiaiCat");
-                if (oiiaiCat) {
-                    const catPos = oiiaiCat.getWorldPosition(new THREE.Vector3());
-                    const dollyPos = app.dolly.getWorldPosition(new THREE.Vector3());
-                    const dist = dollyPos.distanceTo(catPos);
-
-                    if (dist < 3) {
-                        if (!nearCat) {
-                            if (!bgmCat.paused) bgmCat.pause(); // 防止重叠
-                            if (!bgm.paused) bgm.pause();
-                            bgmCat.play();
-                            nearCat = true;
-                        }
-                    } else {
-                        if (nearCat) {
-                            bgmCat.pause();
-                            nearCat = false;
-                        }
-                    }
-                }
-            });
         });
     </script>
+
+    <!-- Music Control Script -->
+    <script>
+        const bgm = document.getElementById('bgm');
+        const btn = document.getElementById('playBgmBtn');
+
+        function toggle() {
+            if (bgm.paused) {
+                bgm.play();
+                btn.textContent = '⏸️ Pause Music';
+            } else {
+                bgm.pause();
+                btn.textContent = '🎵 Play Music';
+            }
+        }
+
+        btn.addEventListener('click', toggle);
+
+        //
+        document.addEventListener("DOMContentLoaded", function () {
+            const app = new App();
+            window.app = app;
+
+            //
+            const renderer = app.renderer;
+            const scene = app.scene;
+
+            const controller = renderer.xr.getController(0); // right controller
+            controller.addEventListener('selectstart', () => {
+                console.log('🎮 Trigger pressed');
+                toggle();
+            });
+            scene.add(controller);
+        });
+    </script>
+
 </body>
 </html>
