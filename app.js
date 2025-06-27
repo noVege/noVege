@@ -1,4 +1,4 @@
-
+﻿
 import * as THREE from './libs/three/three.module.js';
 import { GLTFLoader } from './libs/three/jsm/GLTFLoader.js';
 import { DRACOLoader } from './libs/three/jsm/DRACOLoader.js';
@@ -326,6 +326,31 @@ class App{
         
             if (this.selectPressed || moveGaze){
                 this.moveDolly(dt);
+                // === 自定义音乐播放区 ===
+                const oiiaiCat = this.scene.getObjectByName("OiiaiCat");
+                const bgm = document.getElementById("bgm");
+
+                if (oiiaiCat && bgm) {
+                    const catPos = oiiaiCat.getWorldPosition(new THREE.Vector3());
+                    const dollyPos = this.dolly.getWorldPosition(new THREE.Vector3());
+                    const distance = dollyPos.distanceTo(catPos);
+
+                    if (distance < 3) {
+                        if (!this.nearOiiaiCat) {
+                            if (bgm.src !== location.origin + '/assets/music/cat1.mp3') {
+                                bgm.src = './assets/music/cat1.mp3';
+                            }
+                            bgm.play();
+                            this.nearOiiaiCat = true;
+                        }
+                    } else {
+                        if (this.nearOiiaiCat) {
+                            bgm.pause();
+                            this.nearOiiaiCat = false;
+                        }
+                    }
+                }
+
                 if (this.boardData){
                     const scene = this.scene;
                     const dollyPos = this.dolly.getWorldPosition( new THREE.Vector3() );
