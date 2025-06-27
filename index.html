@@ -84,13 +84,15 @@
 
                 const oiiaiCat = app.scene.getObjectByName("OiiaiCat");
                 if (oiiaiCat) {
+                    oiiaiCat.rotation.y += 0.3;
+
                     const catPos = oiiaiCat.getWorldPosition(new THREE.Vector3());
                     const dollyPos = app.dolly.getWorldPosition(new THREE.Vector3());
                     const dist = dollyPos.distanceTo(catPos);
 
                     if (dist < 3) {
                         if (!nearCat) {
-                            if (!bgmCat.paused) bgmCat.pause(); // 防止重叠
+                            if (!bgmCat.paused) bgmCat.pause(); // optional safety
                             if (!bgm.paused) bgm.pause();
                             bgmCat.play();
                             nearCat = true;
@@ -98,11 +100,17 @@
                     } else {
                         if (nearCat) {
                             bgmCat.pause();
+                            // ✅ 恢复播放 bgm
+                            if (btn.textContent === '⏸️ Pause Music') {
+                                bgm.play();
+                            }
                             nearCat = false;
                         }
                     }
                 }
             });
+
+
         });
     </script>
 </body>
