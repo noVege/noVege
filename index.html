@@ -3,6 +3,8 @@
 <head>
     <title>10college</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+
+    <!-- Favicon -->
     <link rel="apple-touch-icon" sizes="180x180" href="./css/favicon/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="./css/favicon/favicon2.png">
     <link rel="icon" type="image/png" sizes="16x16" href="./css/favicon/favicon1.png">
@@ -10,6 +12,8 @@
     <link rel="mask-icon" href="./css/favicon/safari-pinned-tab.svg" color="#5bbad5">
     <meta name="msapplication-TileColor" content="#da532c">
     <meta name="theme-color" content="#ffffff">
+
+    <!-- CSS -->
     <link type="text/css" rel="stylesheet" href="./css/common.css">
     <style>
         body {
@@ -32,28 +36,29 @@
     </style>
 </head>
 <body>
-    <!-- 🎵 Default Background Music -->
+    <!-- 🎵 Music Controls -->
     <button id="playBgmBtn">🎵 Play Music</button>
     <audio id="bgm" src="./assets/music/bgm.mp3" loop></audio>
-
-    <!-- 🐱 OiiaiCat Music -->
     <audio id="bgmCat" src="./assets/music/cat1.mp3" loop></audio>
 
-    <!-- fas.js -->
+    <!-- Library -->
     <script src="./libs/fas.js"></script>
 
-    <!-- Main Module -->
+    <!-- Main -->
     <script type="module">
         import { App } from './app.js';
+        import * as THREE from './libs/three/three.module.js';
 
         document.addEventListener("DOMContentLoaded", function () {
             const app = new App();
             window.app = app;
 
             const bgm = document.getElementById('bgm');
+            const bgmCat = document.getElementById('bgmCat');
             const btn = document.getElementById('playBgmBtn');
+            let nearCat = false;
 
-            function toggle() {
+            function toggleBgm() {
                 if (bgm.paused) {
                     bgm.play();
                     btn.textContent = '⏸️ Pause Music';
@@ -63,22 +68,16 @@
                 }
             }
 
-            btn.addEventListener('click', toggle);
+            btn.addEventListener('click', toggleBgm);
 
-            // XR Controller Trigger Toggles Music
             const renderer = app.renderer;
             const scene = app.scene;
             const controller = renderer.xr.getController(0);
-
             controller.addEventListener('selectstart', () => {
                 console.log('🎮 Trigger pressed');
-                toggle();
+                toggleBgm();
             });
             scene.add(controller);
-
-            // 🎧 Monitor Player Distance from OiiaiCat
-            const bgmCat = document.getElementById('bgmCat');
-            let nearCat = false;
 
             renderer.setAnimationLoop(() => {
                 if (!app.scene || !app.dolly) return;
@@ -91,7 +90,8 @@
 
                     if (dist < 3) {
                         if (!nearCat) {
-                            if (bgm && !bgm.paused) bgm.pause();
+                            if (!bgmCat.paused) bgmCat.pause(); // 防止重叠
+                            if (!bgm.paused) bgm.pause();
                             bgmCat.play();
                             nearCat = true;
                         }
