@@ -43,10 +43,7 @@
     <!-- Audio Element -->
     <audio id="bgm" src="./assets/music/bgm.mp3" loop></audio>
 
-    <!-- Extra library -->
-    <script src="./libs/fas.js"></script>
-
-    <!-- Main script -->
+    <!-- Main App Script -->
     <script type="module">
         import { App } from './app.js';
 
@@ -54,7 +51,7 @@
             const app = new App();
             window.app = app;
 
-            // 🎵 Music toggle setup
+            // 🎵 Music control
             const bgm = document.getElementById('bgm');
             const btn = document.getElementById('playBgmBtn');
 
@@ -70,11 +67,11 @@
 
             btn.addEventListener('click', toggle);
 
-            // 🎮 Trigger controller to toggle music
+            // 🎮 Trigger to toggle music
             const renderer = app.renderer;
             const scene = app.scene;
 
-            const controller = renderer.xr.getController(0); // Right-hand controller
+            const controller = renderer.xr.getController(0); // right controller
             controller.addEventListener('selectstart', () => {
                 console.log('🎮 Trigger pressed');
                 toggle();
