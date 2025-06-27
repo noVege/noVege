@@ -84,7 +84,7 @@
 
                 const oiiaiCat = app.scene.getObjectByName("OiiaiCat");
                 if (oiiaiCat) {
-                    oiiaiCat.rotation.y += 0.3;
+                    oiiaiCat.rotation.y += 0.01;
 
                     const catPos = oiiaiCat.getWorldPosition(new THREE.Vector3());
                     const dollyPos = app.dolly.getWorldPosition(new THREE.Vector3());
@@ -92,15 +92,16 @@
 
                     if (dist < 3) {
                         if (!nearCat) {
-                            if (!bgmCat.paused) bgmCat.pause(); // optional safety
-                            if (!bgm.paused) bgm.pause();
+                            // 进入猫区域：切到 cat 音乐
+                            bgm.pause();
+                            bgmCat.currentTime = 0; // 重头播放
                             bgmCat.play();
                             nearCat = true;
                         }
                     } else {
                         if (nearCat) {
+                            // 离开猫区域：切回 bgm（只有用户原本有开）
                             bgmCat.pause();
-                            // ✅ 恢复播放 bgm
                             if (btn.textContent === '⏸️ Pause Music') {
                                 bgm.play();
                             }
@@ -109,6 +110,7 @@
                     }
                 }
             });
+
 
 
         });
